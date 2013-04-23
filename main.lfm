@@ -1,0 +1,112 @@
+object frmMain: TfrmMain
+  Left = 1550
+  Height = 136
+  Top = 402
+  Width = 357
+  BorderStyle = bsNone
+  Caption = 'frmMain'
+  ClientHeight = 136
+  ClientWidth = 357
+  FormStyle = fsStayOnTop
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  LCLVersion = '1.0.8.0'
+  object DBGrid1: TDBGrid
+    Left = 0
+    Height = 112
+    Top = 0
+    Width = 357
+    Align = alTop
+    AutoFillColumns = True
+    Color = clWindow
+    Columns = <    
+      item
+        SizePriority = 0
+        Title.Caption = 'Ticks'
+        Width = 30
+        FieldName = 'Ticks'
+      end    
+      item
+        Title.Caption = 'Description'
+        Width = 312
+        FieldName = 'Description'
+      end>
+    DataSource = src
+    DefaultRowHeight = 30
+    FixedCols = 0
+    Options = [dgColumnResize, dgColumnMove, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
+    Scrollbars = ssNone
+    TabOrder = 0
+    OnCellClick = DBGrid1CellClick
+  end
+  object ed: TEdit
+    Left = 0
+    Height = 24
+    Top = 112
+    Width = 176
+    Align = alLeft
+    TabOrder = 1
+  end
+  object btnAdd: TButton
+    Left = 176
+    Height = 24
+    Top = 112
+    Width = 90
+    Align = alClient
+    Caption = 'Add'
+    OnClick = btnAddClick
+    TabOrder = 2
+  end
+  object Button2: TButton
+    Left = 266
+    Height = 24
+    Top = 112
+    Width = 91
+    Align = alRight
+    Caption = 'Distracted'
+    OnClick = Button2Click
+    TabOrder = 3
+  end
+  object con: TZConnection
+    ControlsCodePage = cCP_UTF8
+    UTF8StringsAsWideField = False
+    AutoEncodeStrings = False
+    Properties.Strings = (
+      'AutoEncodeStrings='
+    )
+    AutoCommit = False
+    Connected = True
+    DesignConnection = True
+    AfterConnect = conAfterConnect
+    Port = 0
+    Database = '/Users/pelleke/dev/focusflow/ff.db'
+    Protocol = 'sqlite-3'
+    left = 296
+    top = 8
+  end
+  object qry: TZReadOnlyQuery
+    Connection = con
+    Active = True
+    SQL.Strings = (
+      'SELECT t.id as id, t.description as Description, count(ti.id) as Ticks'
+      'FROM task t'
+      'LEFT JOIN tick ti ON ti.task_id = t.id'
+      'GROUP BY t.id'
+    )
+    Params = <>
+    left = 256
+    top = 8
+  end
+  object src: TDatasource
+    DataSet = qry
+    left = 216
+    top = 8
+  end
+  object tmr: TTimer
+    Enabled = False
+    Interval = 240000
+    OnTimer = tmrTimer
+    left = 176
+    top = 8
+  end
+end
