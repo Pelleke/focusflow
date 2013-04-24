@@ -14,7 +14,7 @@ type
 
   TfrmMain = class(TForm)
     btnAdd: TButton;
-    Button2: TButton;
+    btnDistracted: TButton;
     con: TZConnection;
     DBGrid1: TDBGrid;
     ed: TEdit;
@@ -22,12 +22,12 @@ type
     qry: TZReadOnlyQuery;
     tmr: TTimer;
     procedure btnAddClick(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure conAfterConnect(Sender: TObject);
+    procedure btnDistractedClick(Sender: TObject);
     procedure DBGrid1CellClick(Column: TColumn);
     procedure AddTick(Distracted: Boolean);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure HideForm;
     procedure tmrTimer(Sender: TObject);
   private
@@ -45,11 +45,6 @@ implementation
 
 { TfrmMain }
 
-procedure TfrmMain.conAfterConnect(Sender: TObject);
-begin
-
-end;
-
 procedure TfrmMain.btnAddClick(Sender: TObject);
 var
   q: TZQuery;
@@ -61,19 +56,18 @@ begin
   try
     q.Connection := con;
     q.SQL.Add('INSERT INTO task(description) VALUES (:desc)');
-     q.ParamByName('desc').AsString:=ed.Text;
-     ed.Text := '';
-     q.ExecSQL;
-     qry.Refresh;
-     qry.Last;
-     Self.AddTick(false);
-     Self.HideForm
+    q.ParamByName('desc').AsString:=ed.Text;
+    ed.Text := '';
+    q.ExecSQL;
+    qry.Refresh;
+    qry.Last;
+    Self.AddTick(false);
   finally
     q.Free;
   end;
 end;
 
-procedure TfrmMain.Button2Click(Sender: TObject);
+procedure TfrmMain.btnDistractedClick(Sender: TObject);
 begin
   Self.AddTick(True);
 end;
@@ -97,6 +91,7 @@ begin
     i:=qry.RecNo;
     qry.Refresh;
     qry.RecNo:=i;
+    Self.HideForm;
   finally
     q.Free;
   end;
@@ -109,8 +104,14 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+  qry.Active:=true;
+end;
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
   Self.Left:= Screen.Width - Self.Width - 40;
   Self.Top:= Screen.Height - Self.Height - 40;
+  ed.SetFocus;
 end;
 
 procedure TfrmMain.HideForm;

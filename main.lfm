@@ -10,6 +10,8 @@ object frmMain: TfrmMain
   FormStyle = fsStayOnTop
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnShow = FormShow
+  ShowInTaskBar = stNever
   LCLVersion = '1.0.8.0'
   object DBGrid1: TDBGrid
     Left = 0
@@ -54,17 +56,19 @@ object frmMain: TfrmMain
     Width = 90
     Align = alClient
     Caption = 'Add'
+    Default = True
     OnClick = btnAddClick
     TabOrder = 2
   end
-  object Button2: TButton
+  object btnDistracted: TButton
     Left = 266
     Height = 24
     Top = 112
     Width = 91
     Align = alRight
+    Cancel = True
     Caption = 'Distracted'
-    OnClick = Button2Click
+    OnClick = btnDistractedClick
     TabOrder = 3
   end
   object con: TZConnection
@@ -75,18 +79,14 @@ object frmMain: TfrmMain
       'AutoEncodeStrings='
     )
     AutoCommit = False
-    Connected = True
-    DesignConnection = True
-    AfterConnect = conAfterConnect
     Port = 0
-    Database = '/Users/pelleke/dev/focusflow/ff.db'
+    Database = 'ff.db'
     Protocol = 'sqlite-3'
     left = 296
     top = 8
   end
   object qry: TZReadOnlyQuery
     Connection = con
-    Active = True
     SQL.Strings = (
       'SELECT t.id as id, t.description as Description, count(ti.id) as Ticks'
       'FROM task t'
