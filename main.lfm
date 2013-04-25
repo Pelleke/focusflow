@@ -79,6 +79,7 @@ object frmMain: TfrmMain
       'AutoEncodeStrings='
     )
     AutoCommit = False
+    Connected = True
     Port = 0
     Database = 'ff.db'
     Protocol = 'sqlite-3'
@@ -90,7 +91,11 @@ object frmMain: TfrmMain
     SQL.Strings = (
       'SELECT t.id as id, t.description as Description, count(ti.id) as Ticks'
       'FROM task t'
-      'LEFT JOIN tick ti ON ti.task_id = t.id'
+      'LEFT JOIN tick ti '
+      '  ON ti.task_id = t.id'
+      'WHERE '
+      '  NOT ti.id ISNULL AND '
+      '  date(ti.timestamp, ''localtime'') = date(CURRENT_TIMESTAMP, ''localtime'')'
       'GROUP BY t.id'
     )
     Params = <>
