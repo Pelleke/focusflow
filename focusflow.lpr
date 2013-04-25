@@ -13,7 +13,7 @@ uses
 {$R *.res}
 
 begin
-  //SetCurrentDir(ExtractFileDir(ParamStr(0)));
+  SetCurrentDir(ExtractFileDir(ParamStr(0)));
   RequireDerivedFormResource := True;
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
