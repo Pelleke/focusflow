@@ -57,7 +57,6 @@ begin
     q.Connection := con;
     q.SQL.Add('INSERT INTO task(description) VALUES (:desc)');
     q.ParamByName('desc').AsString:=ed.Text;
-    ed.Text := '';
     q.ExecSQL;
     qry.Refresh;
     qry.Last;
@@ -84,13 +83,20 @@ var
 begin
   q := TZQuery.Create(nil);
   try
+    { Clear the edit box }
+    ed.Text := '';
+
+    { Send a SQL query to the server adding the tick for the currently selected task }
     q.Connection := con;
     q.SQL.Add('INSERT INTO tick(task_id, timestamp, distracted) VALUES (' + IntToStr(qry.FieldValues['id']) + ', CURRENT_TIMESTAMP, ');
     if Distracted then q.SQL.Add('1)') else q.SQL.Add('0)');
     q.ExecSQL;
+
+    { Refresh the dataset }
     i:=qry.RecNo;
     qry.Refresh;
     qry.RecNo:=i;
+
     Self.HideForm;
   finally
     q.Free;
