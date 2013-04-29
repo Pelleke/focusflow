@@ -30,6 +30,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure HideForm;
     procedure tmrTimer(Sender: TObject);
+    procedure ApplicationDeactivate(Sender: TObject);
   private
     { private declarations }
   public
@@ -111,6 +112,7 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
   qry.Active:=true;
+  Application.OnDeactivate:=@ApplicationDeactivate;
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
@@ -131,6 +133,11 @@ procedure TfrmMain.tmrTimer(Sender: TObject);
 begin
   Self.Show;
   Application.BringToFront;
+end;
+
+procedure TfrmMain.ApplicationDeactivate(Sender: TObject);
+begin
+  if (tmr.Enabled = False) then Application.BringToFront;
 end;
 
 end.
