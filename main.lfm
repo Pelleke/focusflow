@@ -34,12 +34,11 @@ object frmMain: TfrmMain
         FieldName = 'Description'
       end>
     DataSource = src
-    DefaultRowHeight = 30
     FixedCols = 0
     Options = [dgColumnResize, dgColumnMove, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     Scrollbars = ssNone
     TabOrder = 0
-    OnCellClick = DBGrid1CellClick
+    OnDblClick = DBGrid1DblClick
   end
   object ed: TEdit
     Left = 0

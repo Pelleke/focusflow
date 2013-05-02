@@ -23,8 +23,8 @@ type
     tmr: TTimer;
     procedure btnAddClick(Sender: TObject);
     procedure btnDistractedClick(Sender: TObject);
-    procedure DBGrid1CellClick(Column: TColumn);
     procedure AddTick(Distracted: Boolean);
+    procedure DBGrid1DblClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -51,30 +51,26 @@ var
   q: TZQuery;
 begin
   ed.Text := Trim(ed.Text);
-  if Length(ed.Text) = 0 then exit;
-
+  if Length(ed.Text) = 0 then Self.AddTick(false)
+  else begin
   q := TZQuery.Create(nil);
-  try
-    q.Connection := con;
-    q.SQL.Add('INSERT INTO task(description) VALUES (:desc)');
-    q.ParamByName('desc').AsString:=ed.Text;
-    q.ExecSQL;
-    qry.Refresh;
-    qry.Last;
-    Self.AddTick(false);
-  finally
-    q.Free;
+    try
+      q.Connection := con;
+      q.SQL.Add('INSERT INTO task(description) VALUES (:desc)');
+      q.ParamByName('desc').AsString:=ed.Text;
+      q.ExecSQL;
+      qry.Refresh;
+      qry.Last;
+      Self.AddTick(false);
+    finally
+      q.Free;
+    end;
   end;
 end;
 
 procedure TfrmMain.btnDistractedClick(Sender: TObject);
 begin
   Self.AddTick(True);
-end;
-
-procedure TfrmMain.DBGrid1CellClick(Column: TColumn);
-begin
-  Self.AddTick(False);
 end;
 
 procedure TfrmMain.AddTick(Distracted: boolean);
@@ -102,6 +98,11 @@ begin
   finally
     q.Free;
   end;
+end;
+
+procedure TfrmMain.DBGrid1DblClick(Sender: TObject);
+begin
+  Self.AddTick(False);
 end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
