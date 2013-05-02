@@ -134,6 +134,7 @@ procedure TfrmMain.tmrTimer(Sender: TObject);
 begin
   Self.Show;
   Application.BringToFront;
+  tmr.Enabled:=false;
 end;
 
 procedure TfrmMain.ApplicationDeactivate(Sender: TObject);
